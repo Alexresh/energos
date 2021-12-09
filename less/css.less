@@ -1,0 +1,252 @@
+@import "global";
+
+.wrapper {
+    position: relative;
+    overflow: hidden;
+    width: @slidebar-width;
+    left: calc(~'(100% - @{slidebar-width})/2');
+    height: @all-picture-height;
+    border: 1px solid black;
+}
+#slide {
+    position: absolute;
+    left: 0px;
+    width: @all-picture-width;
+    height: @small-picture-width;
+    -webkit-animation: slide 5s;
+    -webkit-animation-delay: 2s;
+    animation: slide @animation-time;
+    animation-delay: 2s;
+    //animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+@-webkit-keyframes slide {
+  0% {
+    left: 0px;
+  }
+  33% {
+    left: -65%;
+  }
+  66% {
+    left: -145%;
+  }
+  100% {
+    left: -200%;
+  }
+}
+@keyframes slide {
+  0% {
+    margin-left: 0px;
+  }
+  33% {
+    margin-left: @picture-33;
+  }
+  66%{
+    margin-left: @picture-66;
+  }
+  100% {
+    margin-left: @picture-100;
+  }
+}
+
+body{
+  margin: 0px;
+  background-color: @color1;
+  color: @color3;
+}
+
+div{
+  box-sizing: border-box;
+  //border: 1px solid;
+}
+
+#sidebarWIFI{
+  opacity: 30%;
+  position: absolute;
+  z-index: -1;
+  margin-top: 15%;
+}
+#logo{
+  height: 90%;
+  margin: 1px;
+  float: left;
+}
+.right-title{
+  float:right;
+  font-size: 25px;
+  margin: 20px;
+}
+.right-title>a{
+  margin-left: 15px;
+  text-decoration: none;
+  color: @color3;
+}
+.right-title>a:hover{
+  color: @color1;
+  transition: 0.5s;
+}
+
+#SiteName{
+  vertical-align: middle;
+  margin-top: 10px;
+  text-align: center;
+  font-family: Lobster;
+  letter-spacing: 5px;
+  font-size: 30px; 
+  font-style: normal; 
+  font-variant: normal; 
+  font-weight: 600; 
+  float: left;
+}
+#SiteName:hover{
+  color: @color5;
+}
+
+.header{
+  z-index: 999;
+  position: fixed;
+  height: 70px;
+  width: 100%;
+  background-color: @color2;
+  margin-bottom: 10px;
+}
+
+
+.main{
+  top: 80px;
+  float: left;
+  position: relative;
+  width: 80%;
+  min-height: 700px;
+  //background-color: @color3;
+}
+
+
+#success{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  background-color: @color1;
+  border-radius: 10px;
+  border:@color3 1px solid;
+  text-align: center;
+  vertical-align: middle;
+  height: 140px;
+  font-size: 20px;
+  display: none;
+}
+.item-wrapper{
+  min-width: 200px;
+  width: @item-width;
+  height: @item-height;
+  border: none;
+  border-color: @color4;
+  float: left;
+  overflow: hidden;
+}
+.item-wrapper:hover{
+  transition: 0.5s;
+  border: 3px double @color4;
+  border-radius: 15px;
+  //background-color: @color5;
+}
+.item-wrapper:not(:hover){
+  border: 0px double @color4;
+  border-radius: 0px;
+  transition: 0.5s;
+}
+.item-title{
+  height: 30px;
+  text-align: center;
+  font-size: 25px;
+}
+.item-img>img{
+  height: 160px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; 
+}
+.item-desc{
+  margin: 0px 5px;
+  height: 50px;
+  font-size: 20px;
+  text-align: center;
+}
+.item-price{
+  text-align: center;
+  font-size: 30px;
+  margin-top: 20px;
+}
+.addToCartBtn{
+  width: 50%;
+  height: 30px;
+  margin-left: 25%;
+  border: none;
+  border-radius: 5px;
+  background-color: @color2;
+  color: @color3;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.addToCartBtn:hover{
+  background-color: @color3;
+  color: @color2;
+  transition: 0.3s;
+}
+
+.sidebar{
+  float: left;
+  position: relative;
+  top: 80px;
+  width: 20%;
+  height: 600px;
+//  opacity: 0%;
+  border: 3px double @color4;
+  border-radius: 10px;
+  background-color: @color1;
+}
+
+// .sidebar:hover{
+//   opacity: 100%;
+//   transition: 0.5s;
+// }
+
+// .sidebar:not(:hover){
+//   opacity: 0%;
+//   transition: 0.5s;
+// }
+
+#filters{
+  text-align: center;
+  width: auto;
+}
+
+#filters>ul{
+  text-align: left;
+  padding-left: 10%;
+  list-style-type: none;
+}
+
+
+.footer{
+  float: left;
+  margin-top: 90px;
+  width: 100%;
+  height: 50px;
+  background-color: @color4;
+}
+.authors, .authors>a, .authors>a:visited{
+  line-height: 50px;
+  vertical-align: middle;
+  text-decoration: none;
+  color: @color3;
+}
+.authors>a:hover{
+  transition: 0.5s;
+  color: @color2;
+}
