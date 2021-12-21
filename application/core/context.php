@@ -8,7 +8,10 @@ class Context
 
     private function create_connection()
     {
-        return mysqli_connect($this->mysql_adress, $this->mysql_login, $this->mysql_password, $this->mysql_db);
+        $connection = new PDO("mysql:host=".$this->mysql_adress.";dbname=".$this->mysql_db,
+            $this->mysql_login, $this->mysql_password);
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        return $connection;
     }
 
     private function set_charset($connection)
@@ -16,60 +19,26 @@ class Context
         mysqli_set_charset($connection, "utf8");
     }
 
-    /*public function get_products()
-    {
+    public function get_brands(){
+        
         $connection = $this->create_connection();
         if($connection)
         {
-            $this->set_charset($connection);
-            $sql = "SELECT product.id, product.title, description, price, category.title as category FROM computer_shop.product inner join computer_shop.category on category.id = product.category_id";
-            $result = mysqli_query($connection, $sql);
+            //$this->set_charset($connection);
+            $sql = "SELECT id, name FROM brands";
+            //$result = mysqli_query($connection, $sql);
+            $statement = $connection->query($sql);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
             $resultArray = array();
-            while($row = mysqli_fetch_array($result))
+            //while($row = mysqli_fetch_array($result))
+            while($row = $statement->fetch())
             {
-                $product = new Product($row['id'], $row['title'], $row['description'], $row['category'], $row['price']);
+                $product = new Brand($row['id'], $row['name']);
                 array_push($resultArray, $product);
             }
 
-            mysqli_close($connection);
-            return $resultArray;
-        }
-    }*/
-
-    public function get_categories(){
-        $connection = $this->create_connection();
-        if($connection)
-        {
-            $this->set_charset($connection);
-            $sql = "SELECT id, title FROM computer_shop.category";
-            $result = mysqli_query($connection, $sql);
-            $resultArray = array();
-            while($row = mysqli_fetch_array($result))
-            {
-                $product = new Category($row['id'], $row['title']);
-                array_push($resultArray, $product);
-            }
-
-            mysqli_close($connection);
-            return $resultArray;
-        }
-    }
-
-    public function get_producers(){
-        $connection = $this->create_connection();
-        if($connection)
-        {
-            $this->set_charset($connection);
-            $sql = "SELECT id, title FROM computer_shop.producer";
-            $result = mysqli_query($connection, $sql);
-            $resultArray = array();
-            while($row = mysqli_fetch_array($result))
-            {
-                $product = new Category($row['id'], $row['title']);
-                array_push($resultArray, $product);
-            }
-
-            mysqli_close($connection);
+            //mysqli_close($connection);
+            $connection = null;
             return $resultArray;
         }
     }
@@ -78,24 +47,31 @@ class Context
         $connection = $this->create_connection();
         if($connection)
         {
-            $this->set_charset($connection);
+
+            //$this->set_charset($connection);
             $sql = "SELECT id, title, image, type, description, price
             FROM items";
 
-            $result = mysqli_query($connection, $sql);
+            //$result = mysqli_query($connection, $sql);
+            $statement = $connection->query($sql);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
             $resultArray = array();
-            while($row = mysqli_fetch_array($result))
+            //while($row = mysqli_fetch_array($result))
+            while($row = $statement->fetch())
             {
                 $item = new Item($row['id'], $row['title'], $row['image'], $row['type'], $row['description'], $row['price']);
                 array_push($resultArray, $item);
             }
-            mysqli_close($connection);
+            //mysqli_close($connection);
+            $connection = null;
             return $resultArray;
         }
     }
 
     public function get_filtered_products($predicate){
         $connection = $this->create_connection();
+        $statement = $connection->query($sql);
+        $statement->setFetchMode(PDO::FETCH_ASSOC);
         if($connection)
         {
             $this->set_charset($connection);
@@ -107,7 +83,8 @@ class Context
             echo $sql;
             $result = mysqli_query($connection, $sql);
             $resultArray = array();
-            while($row = mysqli_fetch_array($result))
+            //while($row = mysqli_fetch_array($result))
+            while($row = $statement->fetch())
             {
                 $product = new Product($row['id'], $row['title'], $row['description'], $row['category'], $row['price'], $row['producer']);
                 $product->images = $this->get_images($product->id);
@@ -162,29 +139,6 @@ class Context
         }
 
         return $user;
-    }
-
-    function get_images($id){
-        $connection = $this->create_connection();
-        if($connection)
-        {
-            $this->set_charset($connection);
-            $stmt = $connection->prepare("SELECT data as image 
-            FROM product_image inner join product on product.id = product_image.product_id 
-            inner join image on image.id = product_image.image_id 
-            where product.id = ?");
-            $stmt->bind_param('i', $id);  
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $imagesArray = array();
-            while($row = mysqli_fetch_array($result))
-            {
-                array_push($imagesArray, $row['image']);
-            }
-
-            mysqli_close($connection);
-            return $imagesArray;
-        }
     }
 
     public function get_product($id)

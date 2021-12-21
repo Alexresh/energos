@@ -1,15 +1,21 @@
 <?php
 class Controller_Main extends Controller
 {
-	function __construct()
+	public function __construct()
 	{
 		$this->model = new Model_Main();
 		$this->view = new View();
 	}
 
-	function action_index($paramArray = null){
+	function action_index(){
 		
-		$data = !isset($paramArray)? $this->model->get_data() : $this->model->get_filtered_data($paramArray);
+		$data =  $this->model->get_data();
+		$this->view->generate('view_main.php', 'view_template.php', $data);
+	}
+
+	function action_filter($param = null){
+		var_dump($param);
+		$data = !isset($paramArray) ? $this->model->get_data() : $this->model->get_filtered_data($param);
 		$this->view->generate('view_main.php', 'view_template.php', $data);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 class Controller_404 extends Controller
 {
-	function __construct()
+	public function __construct()
 	{
 		$this->view = new View();
 	}

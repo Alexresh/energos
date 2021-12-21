@@ -109,8 +109,6 @@ class Route
 		foreach($keysValues as $param){
 			$keyValue = explode('=', $param);
 			$arrayParams += [$keyValue[0] => $keyValue[1]];
-
-			
 		}
 		return $arrayParams;
 	}
