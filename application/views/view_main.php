@@ -4,11 +4,13 @@
       <h3>Виды упаковки</h3>
       <ul>
         <li>
-          <input class="checkbox" handle="brandFilter" type="checkbox" value="zb" name="zb">
+          <input class="checkbox" handle="filter" type="checkbox" value="zb" name="zb"
+          <?php echo isset($_GET["zb"]) ? "checked" : "unchecked"?>>
           <label for="zb">Ж/Б</label>
         </li>
         <li>
-          <input class="checkbox" handle="brandFilter" type="checkbox" value="pet" name="pet">
+          <input class="checkbox" handle="filter" type="checkbox" value="pet" name="pet"
+          <?php echo isset($_GET["pet"]) ? "checked" : "unchecked"?>>
           <label for="pet">ПЭТ</label>
         </li>
       </ul>
@@ -16,12 +18,13 @@
       <ul>
       <?php foreach ($brands as $brand) {?>
         <li>
-          <input class="checkbox" handle="brandFilter" type="checkbox" value="<?php echo $brand->id?>" name="<?php echo $brand->name?>"/>
+          <input class="checkbox" handle="filter" type="checkbox" value="<?php echo $brand->id?>" 
+            name="<?php echo $brand->name?>" <?php echo isset($_GET[$brand->id]) ? "checked" : "unchecked"?>/>
           <label for="<?php $brand->name?>"><?php echo $brand->name;?></label>
         </li>
       <?php }?>
       </ul>
-      <button handle = "filter">Найти</button>
+      <button handle = "filterExec">Найти</button>
     </div>
 </div>
 <div class="main" id="main">

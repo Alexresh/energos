@@ -14,34 +14,10 @@ class Context
         return $connection;
     }
 
-    private function set_charset($connection)
-    {
-        mysqli_set_charset($connection, "utf8");
-    }
-
-    public function get_brands(){
-        
-        $connection = $this->create_connection();
-        if($connection)
-        {
-            //$this->set_charset($connection);
-            $sql = "SELECT id, name FROM brands";
-            //$result = mysqli_query($connection, $sql);
-            $statement = $connection->query($sql);
-            $statement->setFetchMode(PDO::FETCH_ASSOC);
-            $resultArray = array();
-            //while($row = mysqli_fetch_array($result))
-            while($row = $statement->fetch())
-            {
-                $product = new Brand($row['id'], $row['name']);
-                array_push($resultArray, $product);
-            }
-
-            //mysqli_close($connection);
-            $connection = null;
-            return $resultArray;
-        }
-    }
+    // private function set_charset($connection)
+    // {
+    //     mysqli_set_charset($connection, "utf8");
+    // }
 
     public function get_items(){
         $connection = $this->create_connection();
@@ -68,30 +44,86 @@ class Context
         }
     }
 
-    public function get_filtered_products($predicate){
+    public function get_filtered_items($predicate){
         $connection = $this->create_connection();
-        $statement = $connection->query($sql);
-        $statement->setFetchMode(PDO::FETCH_ASSOC);
+        //var_dump($predicate);
+        $whereTYPE = "";
+        $whereBRAND = "";
+        if(array_key_exists('zb', $predicate)){
+            $whereTYPE = $whereTYPE." type = 'zb'";
+        }
+        if(array_key_exists('pet', $predicate)){
+            if(strlen($whereTYPE) == 0){
+                $whereTYPE = $whereTYPE." type = 'pet'";
+            }else{
+                $whereTYPE = $whereTYPE." OR type = 'pet'";
+            }
+        }
+        $brands = $this->get_brands();
+    
+        foreach ($brands as $brand) {
+            if(array_key_exists($brand->id, $predicate)){
+                if(strlen($whereBRAND) == 0){
+                    $whereBRAND = $whereBRAND." brand = ".$brand->id;
+                }else{
+                    $whereBRAND = $whereBRAND." OR brand = ".$brand->id;
+                }
+            }
+        }
+        if(strlen($whereTYPE) != 0){
+            $where = $whereTYPE;
+            if(strlen($whereBRAND) != 0){
+                $where = $where." AND ".$whereBRAND;
+            }
+        }else{
+            if(strlen($whereBRAND) != 0){
+                $where = $whereBRAND;
+            }
+        }
+        if(strlen($where) != 0) $where = "WHERE".$where;
+        
+        //$where = strlen($whereTYPE) != 0 ? "WHERE".$whereTYPE." AND ".$whereBRAND : "WHERE".$whereBRAND;
         if($connection)
         {
-            $this->set_charset($connection);
-            $sql = "SELECT product.id, product.title, description, price, category.title as category, producer.title as producer
-            FROM computer_shop.product inner join computer_shop.category on category.id = product.category_id
-            INNER JOIN computer_shop.producer on computer_shop.product.producer_id = computer_shop.producer.id";
+            $sql = "SELECT id, title, image, type, description, price
+            FROM items";
             
-            $sql = $sql.$predicate;
+            $sql = $sql." ".$where;
             echo $sql;
-            $result = mysqli_query($connection, $sql);
+            $statement = $connection->query($sql);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
+            $resultArray = array();
+            while($row = $statement->fetch())
+            {
+                $item = new Item($row['id'], $row['title'], $row['image'], $row['type'], $row['description'], $row['price']);
+                array_push($resultArray, $item);
+            }
+
+            $connection = null;
+            return $resultArray;
+        }
+    }
+
+    public function get_brands(){
+        
+        $connection = $this->create_connection();
+        if($connection)
+        {
+            //$this->set_charset($connection);
+            $sql = "SELECT id, name FROM brands";
+            //$result = mysqli_query($connection, $sql);
+            $statement = $connection->query($sql);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
             $resultArray = array();
             //while($row = mysqli_fetch_array($result))
             while($row = $statement->fetch())
             {
-                $product = new Product($row['id'], $row['title'], $row['description'], $row['category'], $row['price'], $row['producer']);
-                $product->images = $this->get_images($product->id);
+                $product = new Brand($row['id'], $row['name']);
                 array_push($resultArray, $product);
             }
 
-            mysqli_close($connection);
+            //mysqli_close($connection);
+            $connection = null;
             return $resultArray;
         }
     }

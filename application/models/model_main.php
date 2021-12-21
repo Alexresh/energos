@@ -16,6 +16,10 @@ class Model_Main extends Model
     {
 		$items = $this->context->get_filtered_items($param);
         $brands = $this->context->get_brands();
+		return array(
+			'items' => $items,
+			'brands' => $brands
+		);
     }
 }
 ?>
