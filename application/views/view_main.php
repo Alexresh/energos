@@ -61,7 +61,7 @@
           <div class="item-price">
             <?php echo $item->price?>₽
           </div>
-          <button handle ="cart" value="<?php $item->id?>" class="addToCartBtn">В корзину</button>
+          <button handle ="cart" value="<?php echo $item->id?>" class="addToCartBtn">В корзину</button>
         </div>
       </div>
     <?php }?>

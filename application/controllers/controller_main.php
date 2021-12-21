@@ -14,7 +14,6 @@ class Controller_Main extends Controller
 	}
 
 	function action_filter($param = null){
-		//var_dump($param);
 		$data = !isset($param) ? $this->model->get_data() : $this->model->get_filtered_data($param);
 		$this->view->generate('view_main.php', 'view_template.php', $data);
 	}

@@ -1,3 +1,8 @@
+<?php
+  if(isset($_SESSION["User"]) AND !empty($_SESSION["User"])){
+    $user = $_SESSION["User"];
+  }
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,11 +18,17 @@
   </div> -->
   <div class="header">
     <img id="logo" src="../../images/plastic-bottle.png" alt="">
-    <span id="SiteName">Energos</span>
+    <span id="SiteName" onClick="window.location.replace('http://energos/');">Energos</span>
     <div class="right-title">
-      <a href="/register">Регистрация</a>
-      <a href="/login">Войти</a>
-      <a href="/cart">Корзина</a>
+      <?php
+        if(isset($user)){
+          echo '<a href="/login/logout">Выйти</a><a href="/cart">Корзина</a> ['.$user->firstName.']';
+        }else{
+          echo '<a href="/register">Регистрация</a>
+          <a href="/login">Войти</a>';
+        }
+      ?>
+      
     </div>
   </div>
   <?php include 'application/views/'.$content_view; ?>

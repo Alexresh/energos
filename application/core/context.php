@@ -6,8 +6,7 @@ class Context
     private $mysql_adress = "127.0.0.1:3306";
     private $mysql_db = "energos";
 
-    private function create_connection()
-    {
+    private function create_connection(){
         $connection = new PDO("mysql:host=".$this->mysql_adress.";dbname=".$this->mysql_db,
             $this->mysql_login, $this->mysql_password);
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
@@ -73,7 +72,7 @@ class Context
         if(strlen($whereTYPE) != 0){
             $where = $whereTYPE;
             if(strlen($whereBRAND) != 0){
-                $where = $where." AND ".$whereBRAND;
+                $where = "(".$where.") AND (".$whereBRAND.")";
             }
         }else{
             if(strlen($whereBRAND) != 0){
@@ -89,7 +88,6 @@ class Context
             FROM items";
             
             $sql = $sql." ".$where;
-            echo $sql;
             $statement = $connection->query($sql);
             $statement->setFetchMode(PDO::FETCH_ASSOC);
             $resultArray = array();
@@ -128,75 +126,53 @@ class Context
         }
     }
 
-    public function get_user($username, $password){
+    public function get_user($userData){
         $connection = $this->create_connection();
         if($connection)
         {
-            $this->set_charset($connection);
-            $stmt = $connection->prepare('SELECT id, username, password FROM computer_shop.user where username = ? and password = ?;');
-            $stmt->bind_param('is', $username, $password);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $rows_num = mysqli_num_rows($result);
-            if($rows_num == '0'){
-                mysqli_close($connection);
-                return null;
-            }
-
+            $stmt = $connection->prepare('SELECT id, nickname, password, firstName, lastName, location FROM users where nickname = :nickname and password = :password;');
+            $stmt->execute($userData);
             $user = null;
-            while($row = mysqli_fetch_array($result))
+            while($row = $stmt->fetch())
             {
-                $user = new User($row['id'], $row['username']);
-                break;
+                $user = new User($row["id"], $row["nickname"],$row["password"],$row["firstName"],$row["lastName"],$row["location"]);
             }
-
-            mysqli_close($connection);
+            $connection = null;
             return $user;
         }
     }
 
-    public function create_user($username, $password)
+    public function create_user($userData)
     {
+        //return var_dump($userData);
         $user = null;
         $connection = $this->create_connection();
         if($connection)
         {
-            $this->set_charset($connection);
-            $stmt = $connection->prepare("INSERT INTO computer_shop.user (username, password) VALUES (?, ?)");
-            $stmt->bind_param('ss', $username, $password);
-            $stmt->execute();
-            $id = mysqli_insert_id($connection);
-            $user = new User($id, $username);
-            mysqli_close($connection);
+            $stmt = $connection->prepare("INSERT INTO users (nickname, password, firstName, lastName, location) VALUES (:nickname, :password, :firstName, :lastName, :location);");
+            $stmt->execute($userData);
+            $id = $connection->lastInsertId();
+            $user = new User($id, $userData["nickname"],$userData["password"],$userData["firstName"],$userData["lastName"],$userData["location"]);
+            
         }
-
+        $connection = null;
         return $user;
     }
 
-    public function get_product($id)
-    {
+    public function get_item_by_id($id){
         $connection = $this->create_connection();
         if($connection)
         {
-            $this->set_charset($connection);
-            $stmt = $connection->prepare("SELECT product.id, product.title, description, price, category.title as category, producer.title as producer
-            FROM computer_shop.product inner join computer_shop.category on category.id = product.category_id
-            INNER JOIN computer_shop.producer on computer_shop.product.producer_id = computer_shop.producer.id
-            WHERE product.id = ?");
-            $stmt->bind_param('i', $id);  
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            $product = null;
-            while($row = mysqli_fetch_array($result))
+            $stmt = $connection->prepare('SELECT id, title, image, type, description, price
+            FROM items WHERE id = ?');
+            $stmt->execute(array($id));
+            $item = null;
+            while($row = $stmt->fetch())
             {
-                $product = new Product($row['id'], $row['title'], $row['description'], $row['category'], $row['price'], $row['producer']);
-                $product->images = $this->get_images($product->id);
-                break;
+                $item = new Item($row['id'], $row['title'], $row['image'], $row['type'], $row['description'], $row['price']);
             }
-
-            mysqli_close($connection);
-            return $product;
+            $connection = null;
+            return $item;
         }
     }
 
