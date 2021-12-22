@@ -174,6 +174,69 @@ class Context
             $connection = null;
             return $item;
         }
+        $connection = null;
+        return 503;
+    }
+
+    public function add_to_cart($itemId, $userId){
+        $connection = $this->create_connection();
+        $statusCode = 200;
+        if($connection)
+        {
+            $stmt = $connection->prepare('SELECT id FROM cart WHERE userId = ? AND itemId = ?');
+            $stmt->execute(array($userId, $itemId));
+            while($row = $stmt->fetch())
+            {
+                $cartId = $row['id'];
+            }
+            if(isset($cartId)){
+                $stmt = $connection->prepare('UPDATE cart SET count = count + 1 WHERE id = ?');
+                $stmt->execute(array($cartId));
+            }else{
+                $stmt = $connection->prepare('INSERT INTO cart(userId, itemId) VALUES (?, ?)');
+                $stmt->execute(array($userId, $itemId));
+            }
+        }else{
+            $statusCode = 503;
+        }
+        $connection = null;
+        return $statusCode;
+    }
+
+    public function clear_cart($userId){
+        $connection = $this->create_connection();
+        $statusCode = 200;
+        if($connection)
+        {
+            $stmt = $connection->prepare('DELETE FROM cart WHERE userId = ?');
+            $stmt->execute(array($userId));
+        }else{
+            $statusCode = 503;
+        }
+        $connection = null;
+        return $statusCode;
+    }
+
+    public function get_user_cart($userId){
+        $connection = $this->create_connection();
+        $statusCode = 200;
+        if($connection)
+        {
+            $stmt = $connection->prepare('SELECT `cart`.id, `items`.title, `cart`.count, `items`.price FROM `cart` INNER JOIN `items` ON `cart`.`itemId` = `items`.`id` WHERE userId = ?');
+            $stmt->execute(array($userId));
+            $cartItems = array();
+            while($row = $stmt->fetch())
+            {
+                $item = new CartItem($row['id'], $row['title'], $row['count'], $row['price']);
+                array_push($cartItems, $item);
+            }
+            $connection = null;
+            return $cartItems;
+        }else{
+            $statusCode = 503;
+        }
+        $connection = null;
+        return $statusCode;
     }
 
     

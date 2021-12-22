@@ -1,11 +1,14 @@
+//click on "add to cart" button
 $('button[handle="cart"]').on('click', (event)=>{
 
+    //get item id 
     let item = event.target.getAttribute("value");
+    //send item id to "add controller"
     $.post('http://energos/cart/add',{
         item: item
     });
 
-    
+    //shows success block for a few seconds 
     $("#success").css("display", "block");
     setTimeout(function(){
         $("#success").css("display", "none");
@@ -16,14 +19,13 @@ $('button[handle="cart"]').on('click', (event)=>{
 })
 
 let query = "?";
-
+//click on Search button. Generate filter query and navigating through it
 $('button[handle="filterExec"]').on('click', (event)=>{
     query = generate_query();
     window.location.replace('http://energos/main/filter/' + query);
-    console.log(query);
     event.stopPropagation();
 })
-
+//gets the value of each filter
 function generate_query(){
     query = "?";
     $('input[handle="filter"]').each(function (index, value){
@@ -31,14 +33,13 @@ function generate_query(){
         if(this.checked) query = query + "&" + a +"=true";
     });
     return query;
-
 }
 
 $(window).on('load', function() { 
     query = generate_query();    
 });
 
-
+//register button
 $('button[handle="register"]').on('click', (event)=>{
     let firstName = $('input[name="firstName"]').val();
     let lastName = $('input[name="lastName"]').val();

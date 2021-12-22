@@ -1,25 +1,22 @@
 <?php
-class Model_Cart extends Model
-{
+class Model_Cart extends Model{
     
-    public function add($item)
-	{	
-        if(isset($_SESSION["User"])){
-            $userId = $_SESSION["User"]->id;
-            if(isset($_SESSION["Cart"])){
-                $cart = new Cart('0', $userId);
-                $cart->addAll($_SESSION["Cart"]->items);
-                $item_by_id =  $this->context->get_item_by_id($item["item"]);
-                $response = $cart->add($item_by_id->id, $item_by_id->title, $item_by_id->price);
-                $_SESSION["Cart"] = $cart;
-            }else{
-                $cart = new Cart('0', $userId);
-                $item_by_id =  $this->context->get_item_by_id($item["item"]);
-                $response = $cart->add($item_by_id->id, $item_by_id->title, $item_by_id->price);
-                $_SESSION["Cart"] = $cart;
-            }
+    public function add($itemId, $userId){
+        return $this->context->add_to_cart($itemId, $userId);
+    }
+
+    public function clear($userId){
+        return $this->context->clear_cart($userId);
+    }
+
+    public function get_data()
+    {
+        if(isset($_SESSION['User'])){
+            $userId = $_SESSION['User']->id;
+            return array('cartItems' => $this->context->get_user_cart($userId));
         }
-		return $response;
-	}
+        return null; 
+    }
+
 }
 ?>

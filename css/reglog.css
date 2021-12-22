@@ -12,9 +12,9 @@ table{
     text-align: left;
 }
 button{
-    color: white;
+    color: #D4D6D8;
     background-color: #171717;
-    border: 1px solid white;
+    border: 1px solid #D4D6D8;
     border-radius: 5px; 
     font-size: 18px;
 }
@@ -24,4 +24,12 @@ button{
 input{
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 16px;
+}
+a{
+    text-decoration: underline;
+    color: #D4D6D8;
+}
+a:hover{
+    transition: 0.5s;
+    color:#008CD1;
 }

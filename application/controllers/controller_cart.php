@@ -7,14 +7,20 @@ class Controller_cart extends Controller
     }
     
     function action_index(){
-        $this->view->generate('view_cart.php', 'view_template.php');
+        $data = $this->model->get_data();
+        $this->view->generate('view_cart.php', 'view_template.php', $data);
     }
     public function action_add(){
-        $response = $this->model->add($_POST);
-        var_dump($response);
+        if(isset($_SESSION["User"])){
+            $userId = $userId = $_SESSION["User"]->id;
+            return $this->model->add($_POST['item'], $userId);
+        }
     }
     public function action_clear(){
-        $_SESSION["Cart"] = null;
+        if(isset($_SESSION['User'])){
+            $userId = $_SESSION['User']->id;
+            $this->model->clear($userId);
+        }
         header("Location: http://energos/");
     }
 }

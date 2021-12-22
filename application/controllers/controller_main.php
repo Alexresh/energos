@@ -9,7 +9,7 @@ class Controller_Main extends Controller
 
 	function action_index(){
 		
-		$data =  $this->model->get_data();
+		$data = $this->model->get_data();
 		$this->view->generate('view_main.php', 'view_template.php', $data);
 	}
 
