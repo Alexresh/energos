@@ -36,6 +36,9 @@
     <div class="authors">
       <a href="https://vk.com/alexresh52">@Alexandr Alexeev</a>
       <a href="https://vk.com/capybara1620" class="authors">@Dmitriy Sharonov</a>
+      <?php if($_SESSION['User']->id == 1){
+        echo '<a href="admin">Админ панель</a>';
+		  }?>
     </div>
   </div>
   

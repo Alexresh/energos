@@ -142,6 +142,22 @@ class Context
         }
     }
 
+    public function get_user_by_nickname($nickname){
+        $connection = $this->create_connection();
+        if($connection)
+        {
+            $stmt = $connection->prepare('SELECT id, nickname, password, firstName, lastName, location FROM users where nickname = ?;');
+            $stmt->execute(array($nickname));
+            $user = null;
+            while($row = $stmt->fetch())
+            {
+                $user = new User($row["id"], $row["nickname"],$row["password"],$row["firstName"],$row["lastName"],$row["location"]);
+            }
+            $connection = null;
+            return $user;
+        }
+    }
+
     public function create_user($userData)
     {
         //return var_dump($userData);

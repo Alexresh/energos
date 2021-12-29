@@ -16,7 +16,7 @@ $('button[handle="cart"]').on('click', (event)=>{
 
     event.stopPropagation();
 
-})
+});
 
 let query = "?";
 //click on Search button. Generate filter query and navigating through it
