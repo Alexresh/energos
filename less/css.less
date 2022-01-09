@@ -3,47 +3,24 @@
 .wrapper {
     position: relative;
     overflow: hidden;
-    width: @slidebar-width;
-    left: calc(~'(100% - @{slidebar-width})/2');
+    top: @main-top;
+    width: 80%;
     height: @all-picture-height;
-    border: 1px solid black;
 }
 #slide {
     position: absolute;
     left: 0px;
-    width: @all-picture-width;
+    width: auto;
     height: @small-picture-width;
-    -webkit-animation: slide 5s;
-    -webkit-animation-delay: 2s;
     animation: slide @animation-time;
-    animation-delay: 2s;
+    animation-delay: 1s;
     //animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
-@-webkit-keyframes slide {
-  0% {
-    left: 0px;
-  }
-  33% {
-    left: -65%;
-  }
-  66% {
-    left: -145%;
-  }
-  100% {
-    left: -200%;
-  }
-}
 @keyframes slide {
   0% {
     margin-left: 0px;
-  }
-  33% {
-    margin-left: @picture-33;
-  }
-  66%{
-    margin-left: @picture-66;
   }
   100% {
     margin-left: @picture-100;
@@ -115,7 +92,7 @@ div{
 
 
 .main{
-  top: 80px;
+  top: @main-top;
   float: left;
   position: relative;
   width: 80%;

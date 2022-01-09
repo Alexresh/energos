@@ -16,4 +16,5 @@
             <td>Цена: <?php echo $item->price*$item->count?></td>
         </tr>
     <?php  }echo '</table>';}?>
+    <button>Заказать</button>
 </div>

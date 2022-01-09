@@ -27,6 +27,9 @@
       <button handle = "filterExec">Найти</button>
     </div>
 </div>
+  <div class="wrapper">
+      <img id="slide" src="images/slider.png" />
+  </div>
 <div class="main" id="main">
     <div id="success"><img src="images/success.png" alt="">Добавлено</div>
     <!-- <div v-for="energetic in energetics" class="item-wrapper">
@@ -67,4 +70,3 @@
     <?php }?>
 </div>
 <script src="js/vue.min.js"></script>
-<script src="js/items.js"></script>

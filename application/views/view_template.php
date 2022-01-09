@@ -13,9 +13,7 @@
   <script src="../../js/jquerry.js"></script>
 </head>
 <body>
-  <!-- <div class="wrapper">
-      <img id="slide" src="images/slider.png" />
-  </div> -->
+
   <div class="header">
     <img id="logo" src="../../images/plastic-bottle.png" alt="">
     <span id="SiteName" onClick="window.location.replace('http://energos/');">Energos</span>
