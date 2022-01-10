@@ -28,7 +28,7 @@
     </div>
 </div>
   <div class="wrapper">
-      <img id="slide" src="images/slider.png" />
+      <img id="slide" src="/images/slider.png" />
   </div>
 <div class="main" id="main">
     <div id="success"><img src="images/success.png" alt="">Добавлено</div>
